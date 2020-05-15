@@ -8,18 +8,18 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (maxCalc - minCalc + 1)) + minCalc;
 }
 
-const randomBaianinhoPhrase = ({ screen_name: screenName, name }) => {
-  const number = getRandomInt(0, 4);
+const randomBaianinhoPhrase = ({ screen_name: screenName }) => {
+  const number = getRandomInt(1, 3);
   switch (number) {
     case 1:
-      return `@${screenName} É isso aí ${name}! VARA é 20!`;
+      return `@${screenName} É isso aí ${screenName}! VARA é 20!`;
     case 2:
-      return `@${screenName} Boa ${name}! É VARA neles!`;
+      return `@${screenName} Boa ${screenName}! É VARA neles!`;
     case 3:
       return `@${screenName} Não conheço um cliente da Via Varejo que esteja arrependido, pelo contrário, já estamos comprando muito mais. É a melhor empresa de todos os tempos!`;
 
     default:
-      return `@${screenName} É isso aí ${name}! Vara é 20!`;
+      return `@${screenName} É isso aí ${screenName}! Vara é 20!`;
   }
 };
 
@@ -34,16 +34,24 @@ const T = new Twit({
 
 function tweetEvent(tweet) {
   console.log('tweet', tweet);
-  const inReplyTo = tweet.user.screen_name;
+  const inReplyToUser = tweet.user.screen_name;
+  const inReplyTo = tweet.in_reply_to_screen_name;
 
-  if (inReplyTo === 'vvarbot') return;
+  if (inReplyToUser === 'vvarbot' || inReplyTo === 'vvarbot') return;
 
   const nameID = tweet.id_str;
-  const reply = randomBaianinhoPhrase(tweet.user);
+  const threadID = tweet.in_reply_to_status_id_str;
+  const reply = randomBaianinhoPhrase({
+    screen_name: threadID
+      ? tweet.in_reply_to_screen_name
+      : tweet.user.screen_name,
+  });
   const params = {
     status: reply,
-    in_reply_to_status_id: nameID,
+    in_reply_to_status_id: threadID || nameID,
   };
+
+  console.log('params -->', params);
 
   T.post('statuses/update', params, function (err, response) {
     if (err !== undefined) {
