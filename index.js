@@ -92,7 +92,7 @@ function tweetEvent(tweet) {
   });
 
   const params = {
-    status: `${reply}${shuffledWhitespaces()}`,
+    status: `${reply} cc: @${tweet.user.screen_name}`,
     in_reply_to_status_id: tweetIncludesHere ? nameID : threadID,
   };
 
