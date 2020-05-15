@@ -2,16 +2,16 @@
   "name": "vvarbot",
   "version": "1.0.0",
   "description": "VVAR bot for working with Twitter API.",
-  "main": "index.js",
   "repository": "git@github.com:kevinfaguiar/vvarbot.git",
   "author": "Kevin Aguiar",
   "license": "MIT",
   "scripts": {
-    "start": "node run index.js",
+    "start": "node ./index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "twit": "^2.2.11"
   },
   "devDependencies": {
