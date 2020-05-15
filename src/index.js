@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+const fs = require('fs');
+const path = require('path');
 const Twit = require('twit');
 const { randomBaianinhoPhrase } = require('./phrase-generator');
 
@@ -11,6 +13,44 @@ const T = new Twit({
   timeout_ms: 60 * 1000,
   strictSSL: true,
 });
+
+function tweetWithImage(params) {
+  const b64content = fs.readFileSync(
+    path.resolve(__dirname, `./assets/${params.imagePath}`),
+    {
+      encoding: 'base64',
+    }
+  );
+  T.post('media/upload', { media_data: b64content }, function (
+    err,
+    data,
+    response
+  ) {
+    const mediaIdStr = data.media_id_string;
+    const altText = params.status;
+    const metaParams = { media_id: mediaIdStr, alt_text: { text: altText } };
+
+    T.post('media/metadata/create', metaParams, function (err, data, response) {
+      if (!err) {
+        params.media_ids = [mediaIdStr];
+
+        T.post('statuses/update', params, function (err, data, response) {
+          console.info(data);
+        });
+      }
+    });
+  });
+}
+
+function tweetTextOnly(params) {
+  T.post('statuses/update', params, function (err, response) {
+    if (err !== undefined) {
+      console.error(err);
+    } else {
+      console.info(`Tweeted: ${params.status} `);
+    }
+  });
+}
 
 function tweetEvent(tweet) {
   console.log('tweet', tweet);
@@ -40,17 +80,16 @@ function tweetEvent(tweet) {
   });
 
   const params = {
-    status: `${reply} cc: @${tweet.user.screen_name}`,
+    imagePath: reply.imagePath,
+    status: `${reply.message} cc: @${tweet.user.screen_name}`,
     in_reply_to_status_id: tweetIncludesHere ? nameID : threadID,
   };
 
-  T.post('statuses/update', params, function (err, response) {
-    if (err !== undefined) {
-      console.error(err);
-    } else {
-      console.info(`Tweeted: ${params.status} `);
-    }
-  });
+  if (params.imagePath) {
+    tweetWithImage(params);
+  } else {
+    tweetTextOnly(params);
+  }
 }
 
 const stream = T.stream('statuses/filter', { track: ['@baianinho_bot'] });

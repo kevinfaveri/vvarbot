@@ -6,7 +6,7 @@
   "author": "Kevin Aguiar",
   "license": "MIT",
   "scripts": {
-    "start": "node ./index.js",
+    "start": "node ./src/index.js",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },

@@ -5,18 +5,31 @@ function getRandomInt(min, max) {
 }
 
 const randomBaianinhoPhrase = ({ screen_name: screenName }) => {
+  let message = `@${screenName} É isso aí ${screenName}! Vara é 20!`;
+  let imagePath = null;
   const number = getRandomInt(1, 3);
   switch (number) {
     case 1:
-      return `@${screenName} É isso aí ${screenName}! VARA é 20!`;
+      message = `@${screenName} É isso aí ${screenName}! VARA é 20!`;
+      imagePath = 'baiano_1.jpeg';
+      break;
     case 2:
-      return `@${screenName} Boa ${screenName}! É VARA neles!`;
+      message = `@${screenName} Boa ${screenName}! É VARA neles!`;
+      imagePath = 'baiano_2.jpeg';
+      break;
     case 3:
-      return `@${screenName} Não conheço um cliente da Via Varejo que esteja arrependido, pelo contrário, já estamos comprando muito mais. É a melhor empresa de todos os tempos!`;
+      message = `@${screenName} Não conheço um cliente da Via Varejo que esteja arrependido, pelo contrário, já estamos comprando muito mais. É a melhor empresa de todos os tempos!`;
+      imagePath = 'baiano_3.jpeg';
+      break;
+    case 4:
+      message = `@${screenName} Aqui escutando o choro dos HATERS!`;
+      imagePath = 'baiano_4.jpeg';
+      break;
 
     default:
-      return `@${screenName} É isso aí ${screenName}! Vara é 20!`;
+      break;
   }
+  return { message, imagePath };
 };
 
 module.exports = { randomBaianinhoPhrase };
