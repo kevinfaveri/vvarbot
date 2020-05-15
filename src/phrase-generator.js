@@ -7,7 +7,7 @@ function getRandomInt(min, max) {
 const randomBaianinhoPhrase = ({ screen_name: screenName }) => {
   let message = `@${screenName} É isso aí ${screenName}! Vara é 20!`;
   let imagePath = null;
-  const number = getRandomInt(1, 3);
+  const number = getRandomInt(0, 5);
   switch (number) {
     case 1:
       message = `@${screenName} É isso aí ${screenName}! VARA é 20!`;
