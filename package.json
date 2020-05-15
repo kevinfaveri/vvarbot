@@ -1,0 +1,12 @@
+{
+  "name": "vvarbot",
+  "version": "1.0.0",
+  "description": "VVAR bot for working with Twitter API.",
+  "main": "index.js",
+  "repository": "git@github.com:kevinfaguiar/vvarbot.git",
+  "author": "Kevin Aguiar",
+  "license": "MIT",
+  "dependencies": {
+    "twit": "^2.2.11"
+  }
+}
