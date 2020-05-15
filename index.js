@@ -2,6 +2,38 @@ require('dotenv').config();
 
 const Twit = require('twit');
 
+// Man this is evil...
+const RANDOM_WHITESPACE_CHARS = [
+  ' ',
+  '​​​​ ',
+  ' ',
+  ' ',
+  ' ',
+  ' ',
+  ' ',
+  ' ',
+  ' ',
+  '⠀',
+];
+
+function shuffledWhitespaces() {
+  let currentIndex = RANDOM_WHITESPACE_CHARS.length;
+  let temporaryValue;
+  let randomIndex;
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    temporaryValue = RANDOM_WHITESPACE_CHARS[currentIndex];
+    RANDOM_WHITESPACE_CHARS[currentIndex] =
+      RANDOM_WHITESPACE_CHARS[randomIndex];
+    RANDOM_WHITESPACE_CHARS[randomIndex] = temporaryValue;
+  }
+
+  return RANDOM_WHITESPACE_CHARS.join(' ');
+}
+
 function getRandomInt(min, max) {
   const minCalc = Math.ceil(min);
   const maxCalc = Math.floor(max);
@@ -58,16 +90,17 @@ function tweetEvent(tweet) {
       ? tweet.user.screen_name
       : tweet.in_reply_to_screen_name,
   });
+
   const params = {
-    status: reply,
+    status: `${reply}${shuffledWhitespaces()}`,
     in_reply_to_status_id: tweetIncludesHere ? nameID : threadID,
   };
 
   T.post('statuses/update', params, function (err, response) {
     if (err !== undefined) {
-      console.log(err);
+      console.error(err);
     } else {
-      console.log(`Tweeted: ${params.status} `);
+      console.info(`Tweeted: ${params.status} `);
     }
   });
 }
