@@ -64,9 +64,10 @@ function tweetEvent(tweet) {
   );
 
   if (
-    inReplyToUser === 'baianinho_bot' ||
-    inReplyTo === 'baianinho_bot' ||
-    !tweetIncludesVara
+    !tweetIncludesHere &&
+    (inReplyToUser === 'baianinho_bot' ||
+      inReplyTo === 'baianinho_bot' ||
+      !tweetIncludesVara)
   )
     return;
 
