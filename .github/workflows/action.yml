@@ -1,9 +1,9 @@
 name: Build'n'Deploy
 
 on:
-  release:
-    types: [push]
-
+  push:
+    branches:    
+      - master
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
