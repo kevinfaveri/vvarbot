@@ -1,11 +1,14 @@
 version: "3.5"
-volumes:
-  postgres-data:
 services:
   vvarbot:
     build: ./
     volumes:
       - .:/home/app/vvarbot
       - ./node_modules:/home/node_modules
+    environment:
+      CONSUMER_KEY: "${CONSUMER_KEY}"
+      CONSUMER_SECRET: "${CONSUMER_SECRET}"
+      ACCESS_TOKEN: "${ACCESS_TOKEN}"
+      ACCESS_TOKEN_SECRET: "${ACCESS_TOKEN_SECRET}"
     command: yarn start
     # docker-compose run vvarbot yarn | -> for updating deps

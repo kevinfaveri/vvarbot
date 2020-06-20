@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const fs = require('fs');
 const path = require('path');
 const Twit = require('twit');
@@ -21,7 +19,7 @@ function tweetWithImage(params) {
       encoding: 'base64',
     }
   );
-  T.post('media/upload', { media_data: b64content }, function (
+  T.post('media/upload', { media_data: b64content }, function(
     err,
     data,
     response
@@ -30,11 +28,11 @@ function tweetWithImage(params) {
     const altText = params.status;
     const metaParams = { media_id: mediaIdStr, alt_text: { text: altText } };
 
-    T.post('media/metadata/create', metaParams, function (err, data, response) {
+    T.post('media/metadata/create', metaParams, function(err, data, response) {
       if (!err) {
         params.media_ids = [mediaIdStr];
 
-        T.post('statuses/update', params, function (err, data, response) {
+        T.post('statuses/update', params, function(err, data, response) {
           console.info(data);
         });
       }
@@ -43,7 +41,7 @@ function tweetWithImage(params) {
 }
 
 function tweetTextOnly(params) {
-  T.post('statuses/update', params, function (err, response) {
+  T.post('statuses/update', params, function(err, response) {
     if (err !== undefined) {
       console.error(err);
     } else {
