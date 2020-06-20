@@ -1,0 +1,17 @@
+name: Build'n'Deploy
+
+on:
+  release:
+    types: [push]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build, Tag, Push
+        uses: mattdavis0351/actions/docker-gpr@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          image-name: vvarbot
+          dockerfile-location: ./
