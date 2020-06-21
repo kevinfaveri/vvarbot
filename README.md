@@ -5,8 +5,6 @@
 Developed for studying Twitter Streaming API for automated Tweets and Replies.
 
 ## Roadmap
-- Automated tweets each hour with phrase generator
-- Automated tweets each six hours pleding donation
 - More phrases
 - NLP with some Cloud IA
 

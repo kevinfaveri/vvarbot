@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
 const Twit = require('twit');
+const cron = require('node-cron');
 const { randomBaianinhoPhrase } = require('./phrase-generator');
+const { tweetWithImage, tweetTextOnly } = require('./utils');
 
 const T = new Twit({
   consumer_key: process.env.CONSUMER_KEY,
@@ -12,46 +12,7 @@ const T = new Twit({
   strictSSL: true,
 });
 
-function tweetWithImage(params) {
-  const b64content = fs.readFileSync(
-    path.resolve(__dirname, `./assets/${params.imagePath}`),
-    {
-      encoding: 'base64',
-    }
-  );
-  T.post('media/upload', { media_data: b64content }, function(
-    err,
-    data,
-    response
-  ) {
-    const mediaIdStr = data.media_id_string;
-    const altText = params.status;
-    const metaParams = { media_id: mediaIdStr, alt_text: { text: altText } };
-
-    T.post('media/metadata/create', metaParams, function(err, data, response) {
-      if (!err) {
-        params.media_ids = [mediaIdStr];
-
-        T.post('statuses/update', params, function(err, data, response) {
-          console.info(data);
-        });
-      }
-    });
-  });
-}
-
-function tweetTextOnly(params) {
-  T.post('statuses/update', params, function(err, response) {
-    if (err !== undefined) {
-      console.error(err);
-    } else {
-      console.info(`Tweeted: ${params.status} `);
-    }
-  });
-}
-
 function tweetEvent(tweet) {
-  console.log('tweet', tweet);
   const inReplyToUser = tweet.user.screen_name;
   const inReplyTo = tweet.in_reply_to_screen_name;
   const tweetIncludesVara = tweet.entities.hashtags.find(
@@ -72,24 +33,64 @@ function tweetEvent(tweet) {
   const nameID = tweet.id_str;
   const threadID = tweet.in_reply_to_status_id_str || tweet.id_str;
 
+  const screenName = tweetIncludesHere
+    ? tweet.user.screen_name
+    : tweet.in_reply_to_screen_name;
+
   const reply = randomBaianinhoPhrase({
-    screen_name: tweetIncludesHere
-      ? tweet.user.screen_name
-      : tweet.in_reply_to_screen_name,
+    screenName,
   });
 
   const params = {
     imagePath: reply.imagePath,
-    status: `${reply.message} cc: @${tweet.user.screen_name}`,
+    status: `@${screenName} ${reply.message} cc: @${tweet.user.screen_name}`,
     in_reply_to_status_id: tweetIncludesHere ? nameID : threadID,
   };
 
   if (params.imagePath) {
-    tweetWithImage(params);
+    tweetWithImage(T, params);
   } else {
-    tweetTextOnly(params);
+    tweetTextOnly(T, params);
   }
 }
 
 const stream = T.stream('statuses/filter', { track: ['@baianinho_bot'] });
 stream.on('tweet', tweetEvent);
+
+// Schedule random phrases every three hours
+cron.schedule('0 0 */3 * * *', () => {
+  const reply = randomBaianinhoPhrase({ screenName: 'galera' });
+  const params = {
+    imagePath: reply.imagePath,
+    status: reply.message,
+  };
+
+  if (params.imagePath) {
+    tweetWithImage(T, params);
+  } else {
+    tweetTextOnly(T, params);
+  }
+});
+
+// Schedule donation pledge
+cron.schedule('0 0 18 * * *', () => {
+  tweetTextOnly(T, {
+    status: `
+    Galera, preciso da ajuda de vocês! 
+    Eu rodo inteiramente na nuvem e isso acaba tendo custos...
+    Portanto, se possível, me ajude doando qualquer valor para o meu criador aqui:
+    https://cutt.ly/kevin-paypal
+    https://pag.ae/7W8bEJKYK
+    https://picpay.me/kevinfguiar`,
+  });
+});
+
+// Schedule DISCLAIMER
+cron.schedule('0 30 9 * * *', () => {
+  tweetTextOnly(T, {
+    status: `DISCLAIMER: 
+    Esta conta não tem a menor intenção de se passar por uma pessoa real! 
+    Todas as ideias aqui apresentadas são memes relativos a #VVAR3, sem qualquer intenção além de provocar risadas.
+    Também não possui qualquer relação com a Via Varejo.`,
+  });
+});
