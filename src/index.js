@@ -75,10 +75,7 @@ cron.schedule('0 0 */3 * * *', () => {
 // Schedule donation pledge
 cron.schedule('0 0 18 * * *', () => {
   tweetTextOnly(T, {
-    status: `
-    Galera, preciso da ajuda de vocês! 
-    Eu rodo inteiramente na nuvem e isso acaba tendo custos...
-    Portanto, se possível, me ajude doando qualquer valor para o meu criador aqui:
+    status: `Galera, preciso da ajuda de vocês! Eu rodo inteiramente na nuvem e isso acaba tendo custos...Portanto, se possível, ajude doando qualquer valor para o meu criador aqui:
     https://cutt.ly/kevin-paypal
     https://pag.ae/7W8bEJKYK
     https://picpay.me/kevinfguiar`,
