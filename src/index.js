@@ -15,37 +15,36 @@ const T = new Twit({
 function tweetEvent(tweet) {
   const inReplyToUser = tweet.user.screen_name;
   const inReplyTo = tweet.in_reply_to_screen_name;
+  const replyThreadId = tweet.in_reply_to_status_id_str;
   const tweetIncludesVara = tweet.entities.hashtags.find(
     x => x.text.toUpperCase() === 'VARA'
   );
 
-  if (inReplyToUser === 'baianinho_bot' ||
-      inReplyTo === 'baianinho_bot' ||
-      !tweetIncludesVara)
+  if (
+    !tweetIncludesVara ||
+    (inReplyToUser === 'baianinho_bot' && inReplyTo === 'baianinho_bot')
+  )
     return;
 
   const nameID = tweet.id_str;
-  const threadID = tweet.in_reply_to_status_id_str || tweet.id_str;
+  const threadID = replyThreadId || tweet.id_str;
 
-  const screenName = tweet.in_reply_to_screen_name || tweet.user.screen_name;
+  const screenName = replyThreadId ? inReplyTo : inReplyToUser;
 
   const reply = randomBaianinhoPhrase({
     screenName,
   });
 
-  const cc =  tweet.in_reply_to_screen_name ? `cc: @${tweet.user.screen_name}` ? '';
+  const cc = replyThreadId ? `cc: @${inReplyToUser}` : '';
 
   const params = {
     imagePath: reply.imagePath,
     status: `@${screenName} ${reply.message} ${cc}`,
-    in_reply_to_status_id: tweetIncludesHere ? nameID : threadID,
+    in_reply_to_status_id: !replyThreadId ? nameID : threadID,
   };
 
-  if (params.imagePath) {
-    tweetWithImage(T, params);
-  } else {
-    tweetTextOnly(T, params);
-  }
+  if (params.imagePath) tweetWithImage(T, params);
+  else tweetTextOnly(T, params);
 }
 
 const stream = T.stream('statuses/filter', { track: ['@baianinho_bot'] });
