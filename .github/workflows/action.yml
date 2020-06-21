@@ -21,7 +21,8 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          script: nvm use 12 && node -v && | 
+          script: >-
+                  nvm use 12 && node -v &&
                   yarn pm2-stop --cwd ${{ secrets.REMOTE_TARGET }} || true
       - name: Deploy new code to Droplet
         uses: appleboy/scp-action@master
@@ -37,8 +38,9 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          script: nvm use 12 && | 
-                  node -v && | 
-                  echo $PATH && | 
-                  yarn --cwd ${{ secrets.REMOTE_TARGET }} && |
+          script: >-
+                  nvm use 12 && 
+                  node -v && 
+                  echo $PATH && 
+                  yarn --cwd ${{ secrets.REMOTE_TARGET }} && 
                   yarn --cwd ${{ secrets.REMOTE_TARGET }} pm2-start
