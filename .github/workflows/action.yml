@@ -15,14 +15,14 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           image-name: vvarbot
           dockerfile-location: ./
-      - name: Stop running VVARBOT on EC2, if running
+      - name: Stop running VVARBOT on Droplet, if running
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: yarn pm2-stop --cwd ${{ secrets.REMOTE_TARGET }} || true
-      - name: Deploy new code to EC2
+      - name: Deploy new code to Droplet
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.REMOTE_HOST }}
