@@ -36,4 +36,4 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          script: (yarn --cwd ${{ secrets.REMOTE_TARGET }} && yarn --cwd ${{ secrets.REMOTE_TARGET }} pm2-start)
+          script: node -v && yarn --cwd ${{ secrets.REMOTE_TARGET }} && yarn --cwd ${{ secrets.REMOTE_TARGET }} pm2-start
