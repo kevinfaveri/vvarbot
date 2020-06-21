@@ -18,32 +18,26 @@ function tweetEvent(tweet) {
   const tweetIncludesVara = tweet.entities.hashtags.find(
     x => x.text.toUpperCase() === 'VARA'
   );
-  const tweetIncludesHere = tweet.entities.hashtags.find(
-    x => x.text.toUpperCase() === 'AQUI'
-  );
 
-  if (
-    !tweetIncludesHere &&
-    (inReplyToUser === 'baianinho_bot' ||
+  if (inReplyToUser === 'baianinho_bot' ||
       inReplyTo === 'baianinho_bot' ||
       !tweetIncludesVara)
-  )
     return;
 
   const nameID = tweet.id_str;
   const threadID = tweet.in_reply_to_status_id_str || tweet.id_str;
 
-  const screenName = tweetIncludesHere
-    ? tweet.user.screen_name
-    : tweet.in_reply_to_screen_name;
+  const screenName = tweet.in_reply_to_screen_name || tweet.user.screen_name;
 
   const reply = randomBaianinhoPhrase({
     screenName,
   });
 
+  const cc =  tweet.in_reply_to_screen_name ? `cc: @${tweet.user.screen_name}` ? '';
+
   const params = {
     imagePath: reply.imagePath,
-    status: `@${screenName} ${reply.message} cc: @${tweet.user.screen_name}`,
+    status: `@${screenName} ${reply.message} ${cc}`,
     in_reply_to_status_id: tweetIncludesHere ? nameID : threadID,
   };
 
@@ -75,7 +69,7 @@ cron.schedule('0 0 */3 * * *', () => {
 // Schedule donation pledge
 cron.schedule('0 0 18 * * *', () => {
   tweetTextOnly(T, {
-    status: `Galera, preciso da ajuda de vocês! Eu rodo inteiramente na nuvem e isso acaba tendo custos...Portanto, se possível, ajude doando qualquer valor para o meu criador aqui:
+    status: `Pessoal, preciso da ajuda de vocês! Eu rodo inteiramente na nuvem e isso acaba tendo custos...Portanto, se possível, ajude doando qualquer valor para o meu criador aqui:
     https://cutt.ly/kevin-paypal
     https://pag.ae/7W8bEJKYK
     https://picpay.me/kevinfguiar`,
