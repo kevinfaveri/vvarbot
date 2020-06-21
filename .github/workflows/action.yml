@@ -32,7 +32,7 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           source: "./"
           target: ${{ secrets.REMOTE_TARGET }}
-      - name:  Install any new deps and run VVARBOT
+      - name:  Install any new dependencies and run VVARBOT
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.REMOTE_HOST }}

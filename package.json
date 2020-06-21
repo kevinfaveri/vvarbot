@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./src/index.js",
-    "pm2-start": "pm2 start ./src/index.js --name baianinho-bot -i max --exp-backoff-restart-delay=100",
+    "pm2-start": "pm2 start ./src/index.js --name baianinho-bot -i 1 --exp-backoff-restart-delay=100",
     "pm2-stop": "pm2 delete baianinho-bot",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
