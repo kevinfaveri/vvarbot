@@ -15,3 +15,26 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           image-name: vvarbot
           dockerfile-location: ./
+      - name: Stop running VVARBOT on EC2, if running
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: yarn pm2-stop || true
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          privateKey: ${{ secrets.SERVER_SSH_KEY }}
+      - name: Deploy new code to EC2
+        uses: easingthemes/ssh-deploy@v2.0.7
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          ARGS: "-rltgoDzvO --exclude-from={'exclude.txt'}"
+          SOURCE: "./"
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
+      - name: Install any new deps and run VVARBOT
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: (yarn --cwd ${{ secrets.REMOTE_TARGET }} && yarn --cwd ${{ secrets.REMOTE_TARGET }} pm2-start) || true
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          privateKey: ${{ secrets.SERVER_SSH_KEY }}
