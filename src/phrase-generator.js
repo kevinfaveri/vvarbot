@@ -22,7 +22,7 @@ const randomBaianinhoPhrase = ({ screen_name: screenName }) => {
       imagePath = 'baiano_3.jpeg';
       break;
     case 4:
-      message = `@${screenName} Aqui escutando o choro dos HATERS!`;
+      message = `@${screenName} Aqui ouvindo o choro dos HATERS!`;
       imagePath = 'baiano_4.jpeg';
       break;
 
