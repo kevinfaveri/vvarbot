@@ -49,6 +49,16 @@ function tweetEvent(tweet) {
 
 const stream = T.stream('statuses/filter', { track: ['@baianinho_bot'] });
 stream.on('tweet', tweetEvent);
+stream.on('limit', msg => console.warn('limit msg', msg));
+stream.on('connected', function() {
+  console.log('Is Connected');
+});
+stream.on('disconnect', function(disconnectMessage) {
+  console.warn('disconnectMessage', disconnectMessage);
+});
+stream.on('error', function(error) {
+  console.warn('error', error);
+});
 
 // Schedule random phrases every three hours
 cron.schedule('0 0 */3 * * *', () => {
