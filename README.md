@@ -14,6 +14,6 @@ Developed for studying Twitter Streaming API for automated Tweets and Replies.
 
 Paypal: https://cutt.ly/kevin-paypal
 
-Pagseguro: https://pag.ae/7W8bEJKYK
+PagSeguro: https://pag.ae/7W8bEJKYK
 
 Picpay: https://picpay.me/kevinfguiar 
