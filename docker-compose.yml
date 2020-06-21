@@ -10,5 +10,4 @@ services:
       CONSUMER_SECRET: "${CONSUMER_SECRET}"
       ACCESS_TOKEN: "${ACCESS_TOKEN}"
       ACCESS_TOKEN_SECRET: "${ACCESS_TOKEN_SECRET}"
-    command: yarn start
     # docker-compose run vvarbot yarn | -> for updating deps

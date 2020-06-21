@@ -11,4 +11,6 @@ WORKDIR $HOME/vvarbot
 ENV NODE_PATH=/home/node_modules
 VOLUME $NODE_PATH
 
-CMD yarn dev
+RUN npm install pm2 -g
+
+CMD ["pm2-runtime", "./src/index.js"]
