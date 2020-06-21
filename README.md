@@ -5,8 +5,15 @@
 Developed for studying Twitter Streaming API for automated Tweets and Replies.
 
 ## Roadmap
+- Automated tweets each hour with phrase generator
+- Automated tweets each six hours pleding donation
 - More phrases
 - NLP with some Cloud IA
 
 ## Donation
-[![Donation to VVARBOT](https://i.imgur.com/UaXSIm3.gif)](https://pag.ae/7W8bEJKYK)
+
+Paypal: https://cutt.ly/kevin-paypal
+
+Pagseguro: https://pag.ae/7W8bEJKYK
+
+Picpay: https://picpay.me/kevinfguiar 
