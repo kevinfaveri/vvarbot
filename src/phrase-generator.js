@@ -7,7 +7,7 @@ function getRandomInt(min, max) {
 const randomBaianinhoPhrase = ({ screenName }) => {
   let message = `É isso aí ${screenName}! Vara é 20!`;
   let imagePath = 'baiano_1.jpeg';
-  const number = getRandomInt(1, 5);
+  const number = getRandomInt(1, 9);
   switch (number) {
     case 1:
       message = `É isso aí ${screenName}! VARA é 20!`;
@@ -25,7 +25,22 @@ const randomBaianinhoPhrase = ({ screenName }) => {
       message = `Aqui escutando o choro dos HATERS!`;
       imagePath = 'baiano_4.jpeg';
       break;
-
+    case 5:
+      message = `E aí vendido?`;
+      imagePath = 'baiano_5.jpeg';
+      break;
+    case 6:
+      message = `Tenho um remedinho para os vendidos...`;
+      imagePath = 'baiano_6.jpeg';
+      break;
+    case 7:
+      message = `Aqui curtindo uma seriezinha...`;
+      imagePath = 'baiano_7.jpeg';
+      break;
+    case 8:
+      message = `Esperando a VARA chegar em R$ 10 pra entrar comprado...`;
+      imagePath = 'baiano_8.jpeg';
+      break;
     default:
       break;
   }
