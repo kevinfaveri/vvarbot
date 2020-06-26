@@ -15,47 +15,50 @@ const T = new Twit({
 function tweetEvent(tweet) {
   const inReplyToUser = tweet.user.screen_name;
   const inReplyTo = tweet.in_reply_to_screen_name;
+  const replyThreadId = tweet.in_reply_to_status_id_str;
   const tweetIncludesVara = tweet.entities.hashtags.find(
     x => x.text.toUpperCase() === 'VARA'
   );
-  const tweetIncludesHere = tweet.entities.hashtags.find(
-    x => x.text.toUpperCase() === 'AQUI'
-  );
 
   if (
-    !tweetIncludesHere &&
-    (inReplyToUser === 'baianinho_bot' ||
-      inReplyTo === 'baianinho_bot' ||
-      !tweetIncludesVara)
+    !tweetIncludesVara ||
+    (inReplyToUser === 'baianinho_bot' && inReplyTo === 'baianinho_bot')
   )
     return;
 
   const nameID = tweet.id_str;
-  const threadID = tweet.in_reply_to_status_id_str || tweet.id_str;
+  const threadID = replyThreadId || tweet.id_str;
 
-  const screenName = tweetIncludesHere
-    ? tweet.user.screen_name
-    : tweet.in_reply_to_screen_name;
+  const screenName = replyThreadId ? inReplyTo : inReplyToUser;
 
   const reply = randomBaianinhoPhrase({
     screenName,
   });
 
+  const cc = replyThreadId ? `cc: @${inReplyToUser}` : '';
+
   const params = {
     imagePath: reply.imagePath,
-    status: `@${screenName} ${reply.message} cc: @${tweet.user.screen_name}`,
-    in_reply_to_status_id: tweetIncludesHere ? nameID : threadID,
+    status: `@${screenName} ${reply.message} ${cc}`,
+    in_reply_to_status_id: !replyThreadId ? nameID : threadID,
   };
 
-  if (params.imagePath) {
-    tweetWithImage(T, params);
-  } else {
-    tweetTextOnly(T, params);
-  }
+  if (params.imagePath) tweetWithImage(T, params);
+  else tweetTextOnly(T, params);
 }
 
 const stream = T.stream('statuses/filter', { track: ['@baianinho_bot'] });
 stream.on('tweet', tweetEvent);
+stream.on('limit', msg => console.warn('limit msg', msg));
+stream.on('connected', function() {
+  console.log('Is Connected');
+});
+stream.on('disconnect', function(disconnectMessage) {
+  console.warn('disconnectMessage', disconnectMessage);
+});
+stream.on('error', function(error) {
+  console.warn('error', error);
+});
 
 // Schedule random phrases every three hours
 cron.schedule('0 0 */3 * * *', () => {
@@ -75,7 +78,7 @@ cron.schedule('0 0 */3 * * *', () => {
 // Schedule donation pledge
 cron.schedule('0 0 18 * * *', () => {
   tweetTextOnly(T, {
-    status: `Galera, preciso da ajuda de vocês! Eu rodo inteiramente na nuvem e isso acaba tendo custos...Portanto, se possível, ajude doando qualquer valor para o meu criador aqui:
+    status: `Pessoal, preciso da ajuda de vocês! Eu rodo inteiramente na nuvem e isso acaba tendo custos...Portanto, se possível, ajude doando qualquer valor para o meu criador aqui:
     https://cutt.ly/kevin-paypal
     https://pag.ae/7W8bEJKYK
     https://picpay.me/kevinfguiar`,
