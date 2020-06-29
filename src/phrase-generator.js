@@ -41,6 +41,10 @@ const randomBaianinhoPhrase = ({ screenName }) => {
       message = `Esperando a VARA chegar em R$ 10 pra entrar comprado...`;
       imagePath = 'baiano_8.jpeg';
       break;
+    case 9:
+      message = `Prato de hoje...`;
+      imagePath = 'baiano_9.jpeg';
+      break;
     default:
       break;
   }
